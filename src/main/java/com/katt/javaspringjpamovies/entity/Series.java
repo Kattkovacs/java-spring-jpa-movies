@@ -20,5 +20,6 @@ public class Series {
     @Id
     @GeneratedValue
     private Long id;
+    private String name;
 
 }
