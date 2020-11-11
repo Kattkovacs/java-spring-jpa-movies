@@ -102,6 +102,7 @@ public class AllRepositoryTest {
         Series series = Series.builder()
                 .title("Two")
                 .releaseDate(LocalDate.of(1950,2,3))
+                .season(go)
                 .duration(120)
                 .build();
 

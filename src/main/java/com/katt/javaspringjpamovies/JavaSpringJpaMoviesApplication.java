@@ -1,6 +1,8 @@
 package com.katt.javaspringjpamovies;
 
+import com.katt.javaspringjpamovies.entity.Season;
 import com.katt.javaspringjpamovies.entity.Series;
+import com.katt.javaspringjpamovies.repository.SeasonRepository;
 import com.katt.javaspringjpamovies.repository.SeriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -17,6 +19,9 @@ public class JavaSpringJpaMoviesApplication {
     @Autowired
     private SeriesRepository seriesRepository;
 
+    @Autowired
+    private SeasonRepository seasonRepository;
+
     public static void main(String[] args) {
         SpringApplication.run(JavaSpringJpaMoviesApplication.class, args);
     }
@@ -28,6 +33,7 @@ public class JavaSpringJpaMoviesApplication {
                     .title("One")
                     .releaseDate(LocalDate.of(1950, 2, 3))
                     .duration(120)
+                    .season(Season.builder().seasonTitle("OOP").length(6).number(3).build())
                     .build();
             oneSerie.calculateAge();
 
