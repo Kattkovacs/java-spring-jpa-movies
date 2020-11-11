@@ -1,8 +1,10 @@
 package com.katt.javaspringjpamovies.repository;
 
+import com.katt.javaspringjpamovies.entity.Details;
 import com.katt.javaspringjpamovies.entity.Episode;
 import com.katt.javaspringjpamovies.entity.Season;
 import com.katt.javaspringjpamovies.entity.Series;
+import org.assertj.core.util.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,6 +149,66 @@ public class AllRepositoryTest {
         assertThat(episodeRepository.findAll())
                 .hasSize(0);
 
+    }
+
+    @Test
+    public void findByTitleStartingWithOrReleaseDateBetween(){
+        Episode episode3 = Episode.builder()
+                .title("A Deed of Gift")
+                .build();
+
+        Episode episode4 = Episode.builder()
+                .title("Love and Money")
+                .build();
+
+        Episode episode5 = Episode.builder()
+                .title("Fair Shares")
+                .build();
+
+        Episode episode6 = Episode.builder()
+                .title("Beg, Borrow or Steal")
+                .releaseDate(LocalDate.of(1990,2,3))
+                .build();
+
+        Episode episode1 = Episode.builder()
+                .title("Pilot")
+                .releaseDate(LocalDate.of(1990,2,15))
+                .build();
+
+        episodeRepository.saveAll(Lists.newArrayList(episode1, episode5, episode3, episode4, episode6));
+
+        List<Episode> filteredEpisodes = episodeRepository.findByTitleStartingWithOrReleaseDateBetween("A",
+                LocalDate.of(1990, 1, 1),
+                LocalDate.of(1990, 3, 1));
+
+        assertThat(filteredEpisodes)
+                .containsExactlyInAnyOrder(episode6, episode1, episode3);
+    }
+
+    @Test
+    public void findAllDirectedBy(){
+        Episode episode7 = Episode.builder()
+                .title("Beg, Borrow or Steal")
+                .releaseDate(LocalDate.of(1990,2,3))
+                .details(Details.builder().directedBy("David Croft").build())
+                .build();
+        Episode episode8 = Episode.builder()
+                .title("Beg, Borrow or Steal")
+                .releaseDate(LocalDate.of(1990,2,3))
+                .details(Details.builder().directedBy("Roy Gould").build())
+                .build();
+        Episode episode9 = Episode.builder()
+                .title("Beg, Borrow or Steal")
+                .releaseDate(LocalDate.of(1990,2,3))
+                .details(Details.builder().directedBy("David Croft").build())
+                .build();
+
+        episodeRepository.saveAll(Lists.newArrayList(episode7, episode8, episode9));
+        List<String> allDirectedBy = episodeRepository.findAllDirectedBy();
+
+        assertThat(allDirectedBy)
+                .hasSize(2)
+                .containsOnlyOnce("David Croft");
     }
 
 

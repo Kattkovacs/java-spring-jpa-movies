@@ -29,4 +29,5 @@ public class Season {
     @ManyToOne
     private Series series;
 
+
 }

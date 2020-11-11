@@ -27,4 +27,7 @@ public class Episode {
     @ManyToOne
     private Season season;
 
+    @OneToOne
+    private Details details;
+
 }
