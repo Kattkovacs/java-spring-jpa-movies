@@ -1,15 +1,13 @@
 package com.katt.javaspringjpamovies.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -29,11 +27,20 @@ public class Series {
 
     private LocalDate releaseDate;
 
+    @Enumerated(EnumType.STRING)
+    private Certificate certificate;
+
     @Transient
     private Long age;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private Season season;
+    @ElementCollection
+    @Singular
+    private List<String> actors;
+
+    @Singular
+    @OneToMany(mappedBy = "series", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @EqualsAndHashCode.Exclude
+    private Set<Season> seasons;
 
     public void calculateAge(){
         if(releaseDate != null){

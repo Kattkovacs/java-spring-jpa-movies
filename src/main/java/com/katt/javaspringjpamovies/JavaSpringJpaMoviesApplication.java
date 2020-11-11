@@ -1,5 +1,6 @@
 package com.katt.javaspringjpamovies;
 
+import com.katt.javaspringjpamovies.entity.Certificate;
 import com.katt.javaspringjpamovies.entity.Season;
 import com.katt.javaspringjpamovies.entity.Series;
 import com.katt.javaspringjpamovies.repository.SeasonRepository;
@@ -29,15 +30,19 @@ public class JavaSpringJpaMoviesApplication {
     @Profile("production")
     public CommandLineRunner init(){
         return args -> {
-            Series oneSerie = Series.builder()
-                    .title("One")
-                    .releaseDate(LocalDate.of(1950, 2, 3))
-                    .duration(120)
-                    .season(Season.builder().seasonTitle("OOP").length(6).number(3).build())
+            Series mLordSeries = Series.builder()
+                    .title("You Rang, M'Lord?")
+                    .releaseDate(LocalDate.of(1988, 2, 3))
+                    .duration(26)
+                    .certificate(Certificate.FIFTEEN)
+                    .season(Season.builder().seasonTitle("1990 Season1").length(5).build())
+                    .actor("Donald Hewlett")
+                    .actor("Catherine Rabett")
+                    .actor("Susie Brann")
                     .build();
-            oneSerie.calculateAge();
+            mLordSeries.calculateAge();
 
-            seriesRepository.save(oneSerie);
+            seriesRepository.save(mLordSeries);
         };
     }
 }

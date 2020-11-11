@@ -1,5 +1,6 @@
 package com.katt.javaspringjpamovies.repository;
 
+import com.katt.javaspringjpamovies.entity.Episode;
 import com.katt.javaspringjpamovies.entity.Season;
 import com.katt.javaspringjpamovies.entity.Series;
 import org.junit.Test;
@@ -13,6 +14,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,6 +31,9 @@ public class AllRepositoryTest {
 
     @Autowired
     private SeasonRepository seasonRepository;
+
+    @Autowired
+    private EpisodeRepository episodeRepository;
 
     @Autowired
     private TestEntityManager entityManager;
@@ -95,7 +102,6 @@ public class AllRepositoryTest {
     public void seasonIsPersistedWithSeries(){
         Season go = Season.builder()
                 .seasonTitle("Go")
-                .number(1)
                 .length(8)
                 .build();
 
@@ -112,6 +118,34 @@ public class AllRepositoryTest {
         assertThat(seasons)
                 .hasSize(1)
                 .allMatch(season1 -> season1.getId() > 0L);
+
+    }
+
+    @Test
+    public void episodesArePermistedAndDeletedWithNewSeries(){
+        Set<Episode> episode2 = IntStream.range(1, 10)
+                .boxed()
+                .map(integer -> Episode.builder()
+                        .title("The Phantom Sign Writer")
+                        .no(2)
+                        .releaseDate(LocalDate.of(1990, 1, 14))
+                        .build())
+                .collect(Collectors.toSet());
+        Season season1 = Season.builder()
+                .episodes(episode2)
+                .length(5)
+                .seasonTitle("1990")
+                .build();
+        seasonRepository.save(season1);
+
+        assertThat(episodeRepository.findAll())
+                .hasSize(1)
+                .anyMatch(episode -> episode.getTitle().equals("The Phantom Sign Writer"));
+
+        seasonRepository.deleteAll();
+
+        assertThat(episodeRepository.findAll())
+                .hasSize(0);
 
     }
 

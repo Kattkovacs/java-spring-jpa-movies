@@ -2,10 +2,9 @@ package com.katt.javaspringjpamovies.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import java.util.Set;
+
 
 @Data
 @NoArgsConstructor
@@ -20,11 +19,14 @@ public class Season {
 
     private String seasonTitle;
 
-    private Integer number;
-
     private Integer length;
 
-    @OneToOne(mappedBy = "season")
+    @Singular
+    @OneToMany(mappedBy = "season", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @EqualsAndHashCode.Exclude
+    private Set<Episode> episodes;
+
+    @ManyToOne
     private Series series;
+
 }
