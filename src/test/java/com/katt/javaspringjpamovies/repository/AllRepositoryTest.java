@@ -1,5 +1,6 @@
 package com.katt.javaspringjpamovies.repository;
 
+import com.katt.javaspringjpamovies.entity.Season;
 import com.katt.javaspringjpamovies.entity.Series;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +24,9 @@ public class AllRepositoryTest {
 
     @Autowired
     private SeriesRepository seriesRepository;
+
+    @Autowired
+    private SeasonRepository seasonRepository;
 
     @Autowired
     private TestEntityManager entityManager;
@@ -59,6 +63,56 @@ public class AllRepositoryTest {
         seriesRepository.saveAndFlush(seriesThree);
     }
 
+    @Test(expected = DataIntegrityViolationException.class)
+    public void titleShouldBeNotNull(){
+        Series serie = Series.builder()
+                .releaseDate(LocalDate.of(1950,2,3))
+                .duration(120)
+                .build();
+
+        seriesRepository.save(serie);
+    }
+
+    @Test
+    public void transientIsNotSaved(){
+        Series serie = Series.builder()
+                .title("Two")
+                .releaseDate(LocalDate.of(1950,2,3))
+                .duration(120)
+                .build();
+
+        serie.calculateAge();
+        assertThat(serie.getAge()).isGreaterThanOrEqualTo(70);
+
+        seriesRepository.save(serie);
+        entityManager.clear();
+
+        List<Series> series = seriesRepository.findAll();
+        assertThat(series).allMatch(serie1 -> serie1.getAge() == 0L);
+    }
+
+    @Test
+    public void seasonIsPersistedWithSeries(){
+        Season go = Season.builder()
+                .seasonTitle("Go")
+                .number(1)
+                .length(8)
+                .build();
+
+        Series series = Series.builder()
+                .title("Two")
+                .releaseDate(LocalDate.of(1950,2,3))
+                .duration(120)
+                .build();
+
+        seriesRepository.save(series);
+
+        List<Season> seasons = seasonRepository.findAll();
+        assertThat(seasons)
+                .hasSize(1)
+                .allMatch(season1 -> season1.getId() > 0L);
+
+    }
 
 
 }

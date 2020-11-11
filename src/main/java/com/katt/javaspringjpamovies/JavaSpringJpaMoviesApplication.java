@@ -29,6 +29,8 @@ public class JavaSpringJpaMoviesApplication {
                     .releaseDate(LocalDate.of(1950, 2, 3))
                     .duration(120)
                     .build();
+            oneSerie.calculateAge();
+
             seriesRepository.save(oneSerie);
         };
     }

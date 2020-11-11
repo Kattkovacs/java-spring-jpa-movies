@@ -6,11 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 
 @Data
 @NoArgsConstructor
@@ -29,5 +28,17 @@ public class Series {
     private Integer duration;
 
     private LocalDate releaseDate;
+
+    @Transient
+    private Long age;
+
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Season season;
+
+    public void calculateAge(){
+        if(releaseDate != null){
+            age = ChronoUnit.YEARS.between(releaseDate, LocalDate.now());
+        }
+    }
 
 }
