@@ -6,9 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -20,6 +22,12 @@ public class Series {
     @Id
     @GeneratedValue
     private Long id;
-    private String name;
+
+    @Column(nullable = false, unique = true)
+    private String title;
+
+    private Integer duration;
+
+    private LocalDate releaseDate;
 
 }
